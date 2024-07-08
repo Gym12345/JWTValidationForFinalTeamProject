@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+  <button class="btn btn-success" onclick="logout()">Log out</button>
+  <button class="btn btn-warning" onclick="goToAfterLogin()">ToafterLoginPage</button>
+  
+    <div class="container">
+        <h1 class="text-center">AI Testing</h1>
+        <div class="text-center">
+            <button class="btn btn-success" onclick="runNotebook()">Run Notebook</button>
+        </div>
+        <div class="alert alert-danger" id="error-alert" style="display: none;" role="alert"></div>
+        <br>with for loop:<br>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        function getQueryParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        const urlToken = getQueryParameter('token');
+        console.log('Extracted Token:', urlToken);
+
+        function runNotebook() {
+            $.ajax({
+                type: "POST",
+                url: "/admin/run-notebook?token=" + urlToken, //컨트롤러에서 flask 와통신
+                contentType: "application/json",
+                data: JSON.stringify("simple"), // Simple payload for test
+                success: function(response){
+                    let jsonResponse;
+                    if (typeof response === "string") {
+                        jsonResponse = JSON.parse(response);
+                    } else {
+                        jsonResponse = response;
+                    }
+                  
+                    let output = '';
+                    for (let i = 0; i < jsonResponse.length; i++) {
+                        const prettyJson = JSON.stringify(jsonResponse[i], null, 2);
+                        output += prettyJson + '\n\n';
+                    }
+
+                    document.getElementById('output').innerText = output;
+                    document.getElementById('error-alert').style.display = 'none';
+                },
+                error: function(error){
+                    const errorAlert = document.getElementById('error-alert');
+                    errorAlert.innerText = "Error sending data: " + error.responseText;
+                    errorAlert.style.display = 'block';
+                }
+            });
+        }
+        
+        
+        
+        function logout() {
+    	    var token = localStorage.getItem('jwtToken');
+    	   
+    	   
+    	    $.ajax({
+    	        type: "POST",
+    	        url: "/auth/logout",
+    	        headers: {
+    	            "token-for-blacklist":token
+    	        },
+    	        contentType: "application/json",
+    	        success: function (response) {
+    	            if (response==1) {
+    	            	alert("로그아웃 성공");
+    	            	localStorage.removeItem('jwtToken');
+    	                window.location.href = '/auth/loginMenu'; 
+    	            } else {
+    	                alert("로그아웃 실패");
+    	            }
+    	        },
+    	        error: function (xhr, status, error) {
+    	            console.log("logout failed");
+    	            alert("로그아웃 실패");
+    	        }
+    	    });
+      }       
+      function goToAfterLogin(){
+          window.location.href='/normalUser/afterLogin?token='+urlToken;
+       }          
+    </script>
+
+    <!-- Bootstrap JS and dependencies -->
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

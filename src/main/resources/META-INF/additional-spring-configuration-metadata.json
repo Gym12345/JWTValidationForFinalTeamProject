@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "springboot.jwt.secret",
+  "type": "java.lang.String",
+  "description": "A description for 'springboot.jwt.secret'"
+}]}

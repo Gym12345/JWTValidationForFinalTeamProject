@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Template</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    
+       
+        
+     <button class="btn btn-primary" onclick="logout()">Log out</button>
+     <button class="btn btn-warning" onclick="goToAfterLogin()">ToafterLoginPage</button>  
+	 <h1 class="text-center mb-4">Basic Template</h1> 
+	 
+	 <h2 class="text-center mb-4">implement here</h2> 
+	 
+	 
+	 
+	 
+	 
+	 
+    <script>
+        const urlToken = getQueryParameter('token');
+        console.log('Extracted Token:', urlToken);
+
+        function getQueryParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+		
+        function logout() {
+            var token = localStorage.getItem('jwtToken');
+
+            $.ajax({
+                type: "POST",
+                url: "/auth/logout",
+                headers: {
+                    "token-for-blacklist": token
+                },
+                contentType: "application/json",
+                success: function (response) {
+                    if (response == 1) {
+                        alert("로그아웃 성공");
+                        localStorage.removeItem('jwtToken');
+                        window.location.href = '/auth/loginMenu';
+                    } else {
+                        alert("로그아웃 실패");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log("logout failed");
+                    alert("로그아웃 실패");
+                }
+            });
+        }
+        function goToAfterLogin(){
+        	window.location.href='/normalUser/afterLogin?token='+urlToken;
+        }
+        /* window.onbeforeunload = function (e) {
+            logout();
+        }; */
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.6'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.GymCompany'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'io.lettuce:lettuce-core:6.3.2.RELEASE'
+    
+    implementation 'io.springfox:springfox-swagger2:2.9.2'
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    implementation 'org.springframework.security:spring-security-crypto'
+    implementation 'com.oracle.database.jdbc:ojdbc11:21.1.0.0' // only compatible with oracle 21 ,23
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:11.0.0-M16'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    testImplementation 'ch.qos.logback:logback-classic:1.4.14'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'org.mockito:mockito-core:3.9.0'
+    testImplementation 'uk.org.lidalia:slf4j-test:1.2.0'
+    testImplementation 'org.springframework:spring-test:6.1.6'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
+   
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.32'
+
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-parameters'
+}
+
+
+
+jar {
+    enabled = true
+}
+
+springBoot {
+    mainClass = 'com.GymCompany.firstApp.BoardApplication'
+}
