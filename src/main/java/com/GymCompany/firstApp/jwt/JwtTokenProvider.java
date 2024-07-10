@@ -65,12 +65,13 @@ public class JwtTokenProvider { //loaduserbyUsername  쓰임 여기서
 	        LOGGER.info("[init] JwtTokenProvider 내 secretKey 초기화 완료");
 	    }
 	 	
-	    // 예제 13.12
+	   
 	    // JWT 토큰 생성
 	    public String createToken(String userUid, List<String> roles) {
 	        LOGGER.info("[createToken] 토큰 생성 시작");
-	        Claims claims = Jwts.claims().setSubject(userUid);
+	        Claims claims = Jwts.claims().setSubject(userUid); //current logined user
 	        claims.put("roles", roles);
+	        //claims.put("currentLoginedUser", userUid); 
 	        
 	        Date now = new Date();
 	        String token = Jwts.builder()
@@ -85,6 +86,8 @@ public class JwtTokenProvider { //loaduserbyUsername  쓰임 여기서
 	        LOGGER.info("[createToken] 토큰 생성 완료");
 	        return token;
 	    }
+	 
+	  
 	  
 	    public Authentication getAuthentication(String token) {//Authentication 인터페이스는 인증 정보를 담는 하나의 토큰입니다. 필터에서 인증이성공한경우에만 작동
  	        LOGGER.info("[getAuthentication] 토큰 인증 정보 조회 시작");

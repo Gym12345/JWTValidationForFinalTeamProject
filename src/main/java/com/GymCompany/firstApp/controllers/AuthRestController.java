@@ -1,7 +1,9 @@
 package com.GymCompany.firstApp.controllers;
 
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Map;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,11 +48,11 @@ public class AuthRestController {
     @Autowired
     private TokenBlacklistService tokenBlacklistService;
 	
-
+    
     
     @PostMapping(value = "/loginCheck")
     public String loginCheck(@RequestBody TempUserDTO dto, HttpServletResponse response) {
-
+     	
         LOGGER.info("[signIn] Attempting to log in. with id : {}", dto.getUserId());
         SignInResultDTO signInResultDTO = signService.signIn( dto.getUserId(),  dto.getUserPw());
       
@@ -65,7 +67,7 @@ public class AuthRestController {
             loginCookie.setHttpOnly(true);
             loginCookie.setMaxAge(60 * 60); // 1 hour , cuz jwtToken is 1 hour exp
             
-            response.addCookie(loginCookie);
+            response.addCookie(loginCookie); 
             
             
             if (jwtTokenProvider.validateToken(jwtToken)) {
@@ -136,13 +138,28 @@ public class AuthRestController {
 //           return null;
 //      }
 //  }
-    
+    // Method to generate a random string
+    public static String generateRandomString(int length) {
+        String characterSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder stringBuilder = new StringBuilder();
+        SecureRandom random = new SecureRandom();
+        
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characterSet.length());
+            stringBuilder.append(characterSet.charAt(index));
+        }
+        
+        return stringBuilder.toString();
+    }
+
     
 	  @PostMapping(value = "/registerCheck")
 	  public SignUpResultDTO registerCheck(@RequestBody UserListDTO userDTO) {
 	      String role = "normal"; // admin 만 아니면 어떤 스트링이던지 normalUser로 저장되서 상관없음
 	      System.out.println("userId:" + userDTO.getUserId());
-	      
+	      String randomizedString=generateRandomString(10);
+	      userDTO.setProfileName(randomizedString);
+	      System.out.println("randomized:"+userDTO.getProfileName());
 	      // Call the signUp method with all the necessary fields
 	      SignUpResultDTO signUpResultDTO = signService.signUp(
 	    		  userDTO.getUserId(),
@@ -154,7 +171,7 @@ public class AuthRestController {
 	              userDTO.getAge(),
 	              userDTO.getGender(),
 	              userDTO.getProfileUrl(),
-	              userDTO.getProfileName(),
+	              userDTO.getProfileName(),//
 	              userDTO.getUserSize(),
 	              userDTO.getUserBio(),
 	              userDTO.getReceiveEmail(),

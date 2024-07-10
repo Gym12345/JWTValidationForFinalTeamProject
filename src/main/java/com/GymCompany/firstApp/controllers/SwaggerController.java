@@ -9,6 +9,7 @@ import com.GymCompany.firstApp.service.SignService;
 
 import io.swagger.annotations.ApiParam;
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -51,7 +52,19 @@ public class SwaggerController { //swagger
 	        }
 	        return signInResultDTO;
 	    }
-	   
+	    public static String generateRandomString(int length) {
+	        String characterSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	        StringBuilder stringBuilder = new StringBuilder();
+	        SecureRandom random = new SecureRandom();
+	        
+	        for (int i = 0; i < length; i++) {
+	            int index = random.nextInt(characterSet.length());
+	            stringBuilder.append(characterSet.charAt(index));
+	        }
+	        
+	        return stringBuilder.toString();
+	    }
+	    
 	    @PostMapping(value = "/sign-up")
 	    public SignUpResultDTO signUp(
 	        @ApiParam(value = "userId", required = true) @RequestParam(value="userId") String userId,
@@ -73,10 +86,11 @@ public class SwaggerController { //swagger
 	    		
 	    		
 	    		) {
-
+	    	
 	        LOGGER.info("[signUp] 회원가입을 수행합니다.");
 	        LOGGER.info("role : {}", role);
-
+	        String randomizedString=generateRandomString(10);
+	        profileName=randomizedString;
 	        // Call the signUp method with all the necessary fields
 	        SignUpResultDTO signUpResultDTO =  signService.signUp(
 	                userId, userPw, userName, role, email, phone, age, gender,

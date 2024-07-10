@@ -42,7 +42,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/", "/getSecurityContext", "/swagger-ui/**", "/v3/api-docs/**", "/sign-api/sign-in", "/sign-api/sign-up", "/sign-api/exception", "/favicon.ico").permitAll() // swagger 
                 .requestMatchers("/auth/**").permitAll() // 가입 및 로그인 주소는 허용
                 
-                .requestMatchers("/normalUser/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN") // 일반유저 로그인
+                .requestMatchers("/normalUser/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN") // 일반유저 로그인  // permission check refers to simpleGrantedAuthority
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // 일반유저 로그인
                 .requestMatchers("/gamePage").permitAll() // 가입 및 로그인 주소는 허용
                 	

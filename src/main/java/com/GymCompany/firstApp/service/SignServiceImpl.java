@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,9 @@ public class SignServiceImpl implements SignService {
 			this.jwtTokenProvider = jwtTokenProvider;
 			this.passwordEncoder = passwordEncoder;
 		}
+	
+	
+	
 	
 	@Transactional
 	@Override
@@ -148,6 +152,7 @@ public class SignServiceImpl implements SignService {
 	    
 	   
 	}
+	
 
 	    
     

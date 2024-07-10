@@ -22,6 +22,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -118,6 +120,9 @@ public class UserListDTO implements UserDetails {
     @CollectionTable(name = "USER_AUTHORITY", joinColumns = @JoinColumn(name = "UA_ID"))
     @Column(name = "AUTHORITY_NAME")
     private List<String> roles = new ArrayList<>();
+    
+    
+  
 
     public UserListDTO(int ulid, @NotNull @Size(max = 50) String userId, @NotNull @Size(max = 100) String userPw,
                        @NotNull @Size(max = 100) String userName, LocalDate joinDate, LocalDateTime lastLoginTime,
@@ -149,10 +154,16 @@ public class UserListDTO implements UserDetails {
 
     // UserDetails methods
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities() {   //UserDetails interface in Spring Security
         return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
-
+    //map is a stream operation that applies the given function to each element of the stream.
+    //SimpleGrantedAuthority::new is a method reference that creates a new SimpleGrantedAuthority object for each role in the stream. The SimpleGrantedAuthority class is a concrete implementation of the GrantedAuthority interface, which represents a single authority granted to the user.
+    //Each role (a String) is converted into a SimpleGrantedAuthority object.
+    
+    //When a user attempts to authenticate or perform an action, Spring Security will use the authorities returned by getAuthorities() to determine if the user has the necessary permissions. 
+      //For example, if a certain action requires the "ROLE_ADMIN" authority, Spring Security will check if this authority is present in the collection returned by getAuthorities().
+    
     @Override
     public String getPassword() {
         return userPw;
